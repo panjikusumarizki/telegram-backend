@@ -13,12 +13,18 @@ const userModel = require('./src/models/users_models')
 const db = require('./src/configs/db')
 
 io.on('connection', (socket) => {
+    console.log('user connect')
+    
     socket.on('get-all-users', () => {
         userModel.getAll().then((result) => {
             io.emit('list-users', result)
         }).catch((err) => {
             console.log(err)
         })
+    })
+
+    socket.on('delete-message', (data) => {
+        userModel.deleteMsg(data)
     })
 
     socket.on('join-room', (payload) => {
@@ -63,11 +69,11 @@ io.on('connection', (socket) => {
     })
 })
 
-// const path = require('path')
-// const ejs = require('ejs')
+const path = require('path')
+const ejs = require('ejs')
 
-// app.set('views', path.join(__dirname, 'src/views'))
-// app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'src/views'))
+app.set('view engine', 'ejs')
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
